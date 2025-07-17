@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Machine Requirement Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      background: #f5f5f5;
+    }
+    .calculator {
+      background: white;
+      padding: 2em;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.5em;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 0.75em 1.5em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 2em;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Machine Requirement Calculator</h2>
+    <label for="input1">1) How many materials are required per second:</label>
+    <input type="number" id="input1" step="any" />
+
+    <label for="input2">2) Seconds it takes for that material to be produced:</label>
+    <input type="number" id="input2" step="any" />
+
+    <label for="input3">3) How many materials are produced per second:</label>
+    <input type="number" id="input3" step="any" />
+
+    <label for="input4">4) Seconds it takes to produce that material:</label>
+    <input type="number" id="input4" step="any" />
+
+    <button onclick="calculateMachines()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateMachines() {
+      const input1 = parseFloat(document.getElementById("input1").value);
+      const input2 = parseFloat(document.getElementById("input2").value);
+      const input3 = parseFloat(document.getElementById("input3").value);
+      const input4 = parseFloat(document.getElementById("input4").value);
+
+      if ([input1, input2, input3, input4].some(isNaN) || input2 === 0 || input3 === 0 || input4 === 0) {
+        document.getElementById("result").innerText = "Please enter valid, non-zero values in all fields.";
+        return;
+      }
+
+      const desiredRate = input1 / input2;
+      const actualRate = input3 / input4;
+      const machinesNeeded = desiredRate / actualRate;
+      const machinesRounded = Math.ceil(machinesNeeded);
+
+      document.getElementById("result").innerText = `= ${machinesRounded} machine(s) required (${machinesNeeded.toFixed(2)})`;
+    }
+  </script>
+</body>
+</html>
