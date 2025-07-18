@@ -5,13 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Machine Requirement Calculator</title>
   <style>
+    :root {
+      --bg-color: #f5f5f5;
+      --text-color: #000;
+      --card-bg: #fff;
+      --result-color: #333;
+      --input-bg: #e0e0e0;
+    }
+
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #f5f5f5;
+      --card-bg: #1e1e1e;
+      --result-color: #ddd;
+      --input-bg: #2a2a2a;
+    }
+
     body {
       font-family: Arial, sans-serif;
       padding: 2em;
-      background: #f5f5f5;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
     }
     .calculator {
-      background: white;
+      background: var(--card-bg);
       padding: 2em;
       border-radius: 8px;
       max-width: 500px;
@@ -28,6 +46,10 @@
       padding: 0.5em;
       margin-top: 0.5em;
       box-sizing: border-box;
+      background: var(--input-bg);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: var(--text-color);
     }
     button {
       margin-top: 1.5em;
@@ -43,28 +65,78 @@
       margin-top: 2em;
       font-size: 1.2em;
       font-weight: bold;
-      color: #333;
+      color: var(--result-color);
+    }
+    .theme-toggle {
+      display: block;
+      text-align: center;
+      margin-top: 1em;
+    }
+    .theme-toggle button {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      padding: 0.5em 1em;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .instructions {
+      margin-top: 3em;
+      font-size: 1em;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+    .link-section {
+      margin-top: 1em;
+      text-align: center;
+    }
+    .link-section a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .link-section a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="calculator">
     <h2>Machine Requirement Calculator</h2>
-    <label for="input1">1) How many materials are required per second:</label>
+    <label for="input1">Input 1 - How many of x material needed for specific part</label>
     <input type="number" id="input1" step="any" />
 
-    <label for="input2">2) How many seconds that the machine requires it to be produced in:</label>
+    <label for="input2">Input 2 - How many seconds needed to make specific part</label>
     <input type="number" id="input2" step="any" />
 
-    <label for="input3">3) How many materials are produced per second:</label>
+    <label for="input3">Input 3 - How many of said material is created (Currently this is always 1)</label>
     <input type="number" id="input3" step="any" />
 
-    <label for="input4">4) How many seconds it takes to produce that material:</label>
+    <label for="input4">Input 4 - How many seconds needed to create said material</label>
     <input type="number" id="input4" step="any" />
 
     <button onclick="calculateMachines()">Calculate</button>
 
     <div class="result" id="result"></div>
+
+    <div class="theme-toggle">
+      <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </div>
+
+    <div class="instructions">
+      <p>
+        The way you're supposed to use this calculator is to find out how many machines are needed to make a certain part.<br><br>
+        For example: If you need 2 gold ingots for a single CPU which takes 4 seconds to make and you make 1 gold per smelter every 15 seconds,
+        you would input: 2, 4, 1, 15 in the above fields respectively which will give you 8 smelters you need to place to reach 2 gold ingots per 4 seconds.<br><br>
+        This is the best way I can explain it. Good luck!
+      </p>
+    </div>
+
+    <div class="link-section">
+      <a href="https://docs.google.com/spreadsheets/d/1yt72hvpKM-Zxruq0coI3gmqprw4ctVukHV3CzgNduLY/edit?usp=sharing" target="_blank">
+        Build Your Factory Tycoon Profits
+      </a>
+    </div>
   </div>
 
   <script>
@@ -84,8 +156,20 @@
       const machinesNeeded = desiredRate / actualRate;
       const machinesRounded = Math.ceil(machinesNeeded);
 
-      document.getElementById("result").innerText = `= ${machinesRounded} machine(s) required (${machinesNeeded.toFixed(2)})`;
+      document.getElementById("result").innerText = `= ~${machinesRounded} Machines required (${machinesNeeded.toFixed(2)})`;
     }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("preferred-theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("preferred-theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+      }
+    });
   </script>
 </body>
 </html>
